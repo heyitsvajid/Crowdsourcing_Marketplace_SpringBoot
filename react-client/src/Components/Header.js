@@ -11,12 +11,14 @@ class Header extends Component {
   logout(e){
     e.preventDefault();
     localStorage.clear();
-    let url = 'http://localhost:3001/logout';   
-    localStorage.setItem('email', '');
-    axios.get(url,{withCredentials: true})
+    let url = 'http://localhost:8080/logout';   
+    localStorage.clear();
+    debugger
+    axios.post(url,{withCredentials: true})
     .then(res => {
+      debugger
       // eslint-disable-next-line
-        if(res.data == 'Logout'){
+        if(res.status == 200){
           this.props.history.push('/');
           swal({
             type: 'success',

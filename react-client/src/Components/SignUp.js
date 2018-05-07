@@ -87,7 +87,7 @@ class SignUp extends Component {
         return (error.length === 0 ? '' : 'has-error');
     }
     handleSubmit() {     
-        let signUpAPI='http://localhost:3001/signup';
+        let signUpAPI='http://localhost:8080/signup';
         //alert("abc");
         let name = this.state.name.trim();
         let email = this.state.email.trim();
@@ -106,10 +106,17 @@ class SignUp extends Component {
                         text: res.data.errorMsg,
                       })
                 }else{
+                    debugger
                     localStorage.setItem('id',res.data.data.id);
                     localStorage.setItem('name',res.data.data.name);
                     localStorage.setItem('email',res.data.data.email);
                     this.props.history.push('/home');
+                    swal({
+                        type: 'success',
+                        title: 'Sign Up',
+                        text: "Signup Success",
+                      })
+
                 }
             })
             .catch(err => {

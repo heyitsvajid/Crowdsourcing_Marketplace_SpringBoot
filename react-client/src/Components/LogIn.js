@@ -24,11 +24,10 @@ class SignIn extends Component {
 
 
     componentWillMount(){
-        let url = 'http://localhost:3001/isLoggedIn';
-        axios.get(url,{withCredentials: true})
+        let url = 'http://localhost:8080/isLoggedIn';
+        axios.get(url,{withCredentials:true})
             .then(res => {
-                
-                if (res.data.responseCode === 0) {
+                if (res.data.errorMsg === "") {
                     localStorage.setItem('id', res.data.id);
                     localStorage.setItem('name', res.data.name);
                     localStorage.setItem('email', res.data.email);
@@ -83,14 +82,14 @@ class SignIn extends Component {
         return (error.length === 0 ? '' : 'has-error');
     }
     handleSubmit() {
-        let signUpAPI = 'http://localhost:3001/login';
+        let loginUpAPI = 'http://localhost:8080/login';
         let email = this.state.email.trim();
         let password = this.state.password;
         if (!email || !password) {
             return;
         }
         var apiPayload = { email: email, password: password };
-        axios.post(signUpAPI, apiPayload,{withCredentials: true})
+        axios.post(loginUpAPI, apiPayload,{withCredentials:true})
             .then(res => {
                 // eslint-disable-next-line
                 if (res.data.errorMsg != '') {
