@@ -29,17 +29,19 @@ class ProjectItem extends Component {
     }
 
     componentWillMount() {
-        let getProjectAPI = 'http://localhost:3001/getProject';
+        let getProjectAPI = 'http://localhost:8080/getProjectById';
         let id = localStorage.getItem('currentProjectId');
         let currentUserId = localStorage.getItem('id');
+        let docId=""
         if (id) {
+
             var apiPayload = {
                 id: id,
                 currentUserId: currentUserId
             };
             axios.post(getProjectAPI, apiPayload)
                 .then(res => {
-                    console.log(res.data);
+                     console.log(res.data);
                     // eslint-disable-next-line
                     if (res.data.errorMsg != '') {
                         this.setState({
@@ -47,17 +49,45 @@ class ProjectItem extends Component {
                         });
                         // eslint-disable-next-line
                     } else if (res.data.successMsg != '') {
-                         this.setState({
+                             docId=res.data.data.document_id       
+                        this.setState({
                              title: res.data.data.title,
                              skill: res.data.data.skill,
                              description: res.data.data.description,
-                             budget: res.data.data.budget,
+                             budget: res.data.data.range,
                              period: res.data.data.period,
                              average: res.data.data.average,
-                             bidNowButton: res.data.data.bidNowButton,
-                             documentHref: res.data.data.link
                          });
                         this.props.currentProject(res.data.data);
+
+                        let getProjectDocAPI = 'http://localhost:8080/getProjectDocument';
+                        if (docId) {
+                            var apiDocPayload = {
+                                id: docId,
+                            };
+                            axios.post(getProjectDocAPI, apiDocPayload)
+                                .then(res => {
+                                    console.log(res.data);
+                                    // eslint-disable-next-line
+                                    if (res.data.errorMsg != '') {
+                                        this.setState({
+                                            errorMessage: res.data.errorMsg
+                                        });
+                                        // eslint-disable-next-line
+                                    } else if (res.data.successMsg != '') {
+                                         this.setState({
+                                             documentHref: res.data.data.link
+                                         });
+                                    } else {
+                                        this.setState({
+                                            errorMessage: 'Unknown error occurred'
+                                        });
+                                    }
+                                })
+                                .catch(err => {
+                                    console.error(err);
+                                });
+                        }
                     } else {
                         this.setState({
                             errorMessage: 'Unknown error occurred'
@@ -68,6 +98,34 @@ class ProjectItem extends Component {
                     console.error(err);
                 });
         }
+        let projectId = localStorage.getItem('currentProjectId');
+        let userId = localStorage.getItem('id');
+        let checkBidAPI = 'http://localhost:8080/getProjectBids/'+projectId;
+
+        var apiPayload = {userId: userId, projectId: projectId};
+        axios.post(checkBidAPI, apiPayload)
+            .then(res => {
+                if (res.data.errorMsg != '') {
+                    this.setState({
+                        errorMessage: res.data.errorMsg
+                    });
+                } else {
+                    let bids = res.data.data;
+                    bids.forEach(element => {
+                        if(element.userId==userId){
+                            this.setState({
+                                bidNowButton: false
+                            });
+                        }
+                            
+                    });
+                }
+            })
+            .catch(err => {
+                console.error(err);
+            });
+
+
     }
 
     handlebidNowButton() {
@@ -140,7 +198,7 @@ class ProjectItem extends Component {
                                                             </tr>
                                                             <tr>
                                                                 <td><strong>Budget</strong></td>
-                                                                <td><strong>$</strong> { this.props.project.budget }</td>
+                                                                <td><strong>$</strong> { this.props.project.range }</td>
                                                             </tr>
                                                             <tr>
                                                                 <td><strong>Period</strong></td>

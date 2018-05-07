@@ -28,7 +28,7 @@ class ProjectForm extends Component {
   }
   handleSubmit(e) {
     e.preventDefault();
-    let postProjectAPI = 'http://localhost:3001/postProject';
+    let postProjectAPI = 'http://localhost:8080/postProject';
     let title = this.state.title.trim();
     let description = this.state.description;
     let skill = this.state.skill;
@@ -92,7 +92,7 @@ class ProjectForm extends Component {
     let reader = new FileReader();
     let file = e.target.files[0];
     // eslint-disable-next-line
-    if (file.type == 'application/pdf') {
+    if (file && file.type == 'application/pdf') {
       reader.onloadend = () => {
         this.setState({
           file: file,

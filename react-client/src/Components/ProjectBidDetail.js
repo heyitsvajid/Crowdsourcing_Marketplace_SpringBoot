@@ -11,8 +11,8 @@ class ProjectBidDetail extends Component {
     }
   }
   componentWillMount() {
-    let getBidsAPI = 'http://localhost:3001/getBids';
     let id = localStorage.getItem('currentProjectId');
+    let getBidsAPI = 'http://localhost:8080/getProjectBids/'+id;
     let currentUserId = localStorage.getItem('id');
     if (id) {
       var apiPayload = {
@@ -57,7 +57,7 @@ class ProjectBidDetail extends Component {
   }
 
   hireEmployer = (e) => {
-    let hireEmployerAPI = 'http://localhost:3001/hireEmployer';
+    let hireEmployerAPI = 'http://localhost:8080/hireFreelancer';
     let projectId = localStorage.getItem('currentProjectId');
     var str = e.target.id;
     var res = str.split("/");
@@ -94,6 +94,34 @@ class ProjectBidDetail extends Component {
       });
   }
 
+
+  getProfileName(userId){
+    let getprofileAPI = 'http://localhost:8080/getprofile';
+    var apiPayload = {
+        id: userId
+    };
+    axios.post(getprofileAPI, apiPayload)
+        .then(res => {
+            // eslint-disable-next-line
+            if (res.data.errorMsg != '') {
+                this.setState({
+                    errorMessage: res.data.errorMsg
+                });
+                return "Madhukar";
+            } else if (res.data.successMsg != '') {
+                return res.data.data.name;
+            } else {
+              return "Madhukar";
+                this.setState({
+                    errorMessage: 'Unknown error occurred'
+                });
+            }
+        })
+        .catch(err => {
+            console.error(err);
+        });
+
+  }
   render() {
 
     let projectBids = this.state.projectBids.map(bid => {
@@ -101,15 +129,15 @@ class ProjectBidDetail extends Component {
         <div>
           <div class="card flex-md-row mb-8 box-shadow h-md-300">
             <div class="card-body d-flex flex-column align-items-start ">
-              <h3> <strong class="d-inline-block mb-1 text-primary">{bid.name}</strong></h3>
+              <h3> <strong class="d-inline-block mb-1 text-primary">{bid.userName}</strong></h3>
 
               <div class="mb-1"><strong><p class="card-text mb-auto text-muted">Days : {bid.bid_period}</p></strong></div>
               <strong><p class="card-text mb-auto text-muted">Bid : $ {bid.bid_amount}</p></strong>
               {localStorage.getItem('hireFlag') == 'true' ?
-                <button type="button" id={bid.user_id + '/' + bid.bid_period} onClick={this.hireEmployer} class="btn btn-primary">Hire {bid.name}</button>
+                <button type="button" id={bid.userId + '/' + bid.bid_period} onClick={this.hireEmployer} class="btn btn-primary">Hire {bid.name}</button>
                 : <div />}
             </div>
-            {this.renderImage(bid.user_id, bid.profile_id)}
+            {this.renderImage(bid.userId, bid.profile_id)}
 
           </div><br /></div>)
     })
