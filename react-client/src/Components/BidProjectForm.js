@@ -7,6 +7,7 @@ class BidProjectForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            id:0,
             amount: '',
             period: '',
             update:false
@@ -15,9 +16,10 @@ class BidProjectForm extends Component {
     }
 
     componentWillMount(){
-        let checkBidAPI = 'http://localhost:3001/checkBid';
         let projectId = localStorage.getItem('currentProjectId');
         let userId = localStorage.getItem('id');
+        let checkBidAPI = 'http://localhost:8080/getProjectBids/'+projectId;
+
         var apiPayload = {userId: userId, projectId: projectId};
         axios.post(checkBidAPI, apiPayload)
             .then(res => {
@@ -26,19 +28,16 @@ class BidProjectForm extends Component {
                         errorMessage: res.data.errorMsg
                     });
                 } else {
-                    if(res.data.data.update==true){
-                        this.setState({
-                            amount: res.data.data.amount,
-                            period: res.data.data.period,
-                            update : true           
-                        });
-                  
-                    }else{
-                        this.setState({
-                            update : false           
-                        });
-                    }
-                    
+                    let bids = res.data.data;
+                    bids.forEach(element => {
+                        if(element.userId==userId){
+                            this.setState({
+                                id:element.id,
+                                amount: element.bid_amount,
+                                period: element.bid_period 
+                            });
+                        }                            
+                    });
                 }
             })
             .catch(err => {
@@ -53,10 +52,11 @@ class BidProjectForm extends Component {
     }
     handleSubmit(e) {
         e.preventDefault();
-        let postBidAPI = 'http://localhost:3001/postBid';
+        debugger
+        let postBidAPI = 'http://localhost:8080/postBid';
+        let id = this.state.id?this.state.id:0;
         let period = this.state.period;
         let amount = this.state.amount;
-        let update = this.state.update;
         let projectId = localStorage.getItem('currentProjectId');
         let userId = localStorage.getItem('id');
         if (!period || !amount) {
@@ -66,7 +66,14 @@ class BidProjectForm extends Component {
             console.log('Project/Employee ID not found');
             return;
         }
-        var apiPayload = { update:update,userId: userId, projectId: projectId, period: period, amount: amount };
+        var apiPayload;
+        if(id==0){
+            apiPayload = {userId: userId, projectId: projectId, bid_period: period, bid_amount: amount };
+        }else{
+            apiPayload = { id:id,userId: userId, projectId: projectId, bid_period: period, bid_amount: amount };
+        }
+        
+        
         axios.post(postBidAPI, apiPayload)
             .then(res => {
                 if (res.data.errorMsg != '') {

@@ -17,21 +17,22 @@ class Dashboard extends Component {
     } 
     componentWillMount() {
 
-        let url = 'http://localhost:3001/isLoggedIn';
+        let url = 'http://localhost:8080/isLoggedIn';
         axios.get(url,{withCredentials: true})
             .then(res => {
+                debugger
                 
-                if (res.data.responseCode === 0) {
-                    localStorage.setItem('id', res.data.id);
-                    localStorage.setItem('name', res.data.name);
-                    localStorage.setItem('email', res.data.email);
-                    let getUserBidProjects = 'http://localhost:3001/getUserBidProjects';
+                if (res.data.errorMsg === "") {
+                    localStorage.setItem('id', res.data.data.id);
+                    localStorage.setItem('name', res.data.data.name);
+                    localStorage.setItem('email', res.data.data.email);
+                    let getUserBidProjects = 'http://localhost:8080/getUserBidProjects';
                     let id = localStorage.getItem('id');
                     if (id) {
                         var apiPayload = {
                             id: id
                         };
-                        axios.post(getUserBidProjects, apiPayload)
+                        axios.post(getUserBidProjects, apiPayload,{withCredentials: true})
                             .then(res => {
                                 // eslint-disable-next-line
                                 if (res.data.errorMsg != '') {

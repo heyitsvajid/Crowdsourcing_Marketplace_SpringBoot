@@ -19,22 +19,23 @@ class MyProjects extends Component {
         };
     }
     componentWillMount() {
-        let url = 'http://localhost:3001/isLoggedIn';
+        let url = 'http://localhost:8080/isLoggedIn';
         axios.get(url,{withCredentials: true})
             .then(res => {
-                
-                if (res.data.responseCode === 0) {
-                    localStorage.setItem('id', res.data.id);
-                    localStorage.setItem('name', res.data.name);
-                    localStorage.setItem('email', res.data.email);
-                    let getUserProjects = 'http://localhost:3001/getUserProjects';
+                debugger
+                if (res.data.errorMsg === "") {
+                    localStorage.setItem('id', res.data.data.id);
+                    localStorage.setItem('name', res.data.data.name);
+                    localStorage.setItem('email', res.data.data.email);
+                    let getUserProjects = 'http://localhost:8080/getUserProjects';
                     let id = localStorage.getItem('id');
                     if (id) {
                         var apiPayload = {
                             id: id
                         };
-                        axios.post(getUserProjects, apiPayload)
+                        axios.post(getUserProjects, apiPayload,{withCredentials: true})
                             .then(res => {
+                                debugger;
                                 // eslint-disable-next-line
                                 if (res.data.errorMsg != '') {
                                     this.setState({
@@ -43,8 +44,8 @@ class MyProjects extends Component {
                                     // eslint-disable-next-line
                                 } else if (res.data.successMsg != '') {
                                     this.setState({
-                                        openProjectstableRowData: res.data.data.openProjects,
-                                        workInProgressProjectstableRowData: res.data.data.progressProjects,
+                                        openProjectstableRowData: res.data.data[0],
+                                        workInProgressProjectstableRowData: res.data.data[1],
                                     });
                                 } else {
                                     this.setState({

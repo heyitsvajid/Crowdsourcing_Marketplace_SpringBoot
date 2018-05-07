@@ -18,6 +18,7 @@ class Table extends Component {
     console.log(headerNodes);
 
     let rowNodes = this.props.tableRowData.map(rowData => {
+      debugger
       return (
         <CustomRow action={this.props.action} rowData={rowData} >
         </CustomRow>
