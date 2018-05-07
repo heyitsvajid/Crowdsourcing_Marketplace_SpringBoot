@@ -77,11 +77,11 @@ public class User implements Serializable {
         this.about = about;
     }
 
-    public Integer getProfile_id() {
+    public Long getProfile_id() {
         return profile_id;
     }
 
-    public void setProfile_id(Integer profile_id) {
+    public void setProfile_id(Long profile_id) {
         this.profile_id = profile_id;
     }
 
@@ -99,7 +99,7 @@ public class User implements Serializable {
 
     private Long phone;
     private String about;
-    private Integer profile_id;
+    private Long profile_id;
     private String skills;
 
     @Column(name = "registration",nullable = false, updatable = false)
