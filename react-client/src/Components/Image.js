@@ -18,20 +18,22 @@ class ImageUpload extends Component {
   }
 
   componentWillMount() {
-    let getprofileImageAPI = 'http://localhost:3001/getProfileImage';
+    let getprofileImageAPI = 'http://localhost:8080/getprofileImage';
     let id = localStorage.getItem('id');
     if (id) {
       var apiPayload = {
         id: id
       }
+      debugger
       axios.post(getprofileImageAPI, apiPayload)
         .then(res => {
+          debugger
           console.log(res.data);
           if (res.data.errorMsg != '') {
             console.log('No Image Found');
           } else {
             this.setState({
-              requireImagePath: res.data.data.src
+              requireImagePath: res.data.data
             });
           }
         })
@@ -54,7 +56,7 @@ class ImageUpload extends Component {
   _handleSubmit(e) {
     e.preventDefault();
     // TODO: do something with -> this.state.file
-    let uploadAPI = 'http://localhost:3001/uploadImage';
+    let uploadAPI = 'http://localhost:8080/imageUpload';
     const formData = new FormData();
     formData.append('file', this.state.file);
     formData.append('id', localStorage.getItem('id'));
@@ -85,15 +87,14 @@ class ImageUpload extends Component {
     let reader = new FileReader();
     let file = e.target.files[0];
 
-    if(file.type == 'image/png'){
+    if(file && file.type == 'image/png'){
       reader.onloadend = () => {
         this.setState({
           file: file,
           imagePreviewUrl: reader.result
         });
       }
-      reader.readAsDataURL(file)
-  
+      reader.readAsDataURL(file)  
     }else{
       swal({
         type: 'error',

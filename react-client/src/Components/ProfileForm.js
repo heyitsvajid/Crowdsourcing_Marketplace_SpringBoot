@@ -38,7 +38,7 @@ class ProfileForm extends Component {
   }
 
   componentWillMount() {
-    let getprofileAPI = 'http://localhost:3001/getprofile';
+    let getprofileAPI = 'http://localhost:8080/getprofile';
     let id = localStorage.getItem('id');
     if (id) {
       var apiPayload = {
@@ -73,7 +73,7 @@ class ProfileForm extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    let updateProfileAPI = 'http://localhost:3001/updateprofile';
+    let updateProfileAPI = 'http://localhost:8080/updateProfile';
     let name = this.state.name.trim();
     let email = this.state.email.trim();
     let password = this.state.password;

@@ -19,11 +19,11 @@ class Profile extends Component {
     }
 
     componentWillMount() {
-        let url = 'http://localhost:3001/isLoggedIn';
+        let url = 'http://localhost:8080/isLoggedIn';
         axios.get(url, { withCredentials: true })
             .then(res => {
 
-                if (res.data.responseCode === 0) {
+                if (res.data.errorMsg === "") {
                     localStorage.setItem('id', res.data.id);
                     localStorage.setItem('name', res.data.name);
                     localStorage.setItem('email', res.data.email);
