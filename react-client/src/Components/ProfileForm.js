@@ -80,6 +80,7 @@ class ProfileForm extends Component {
     let phone = this.state.phone;
     let about = this.state.about;
     let skills = this.state.skills;
+    debugger
     let id = localStorage.getItem('id');
 
     if (!name || !email) {
@@ -97,7 +98,7 @@ class ProfileForm extends Component {
       phone: phone,
       about: about,
       skills: skills,
-      id: id
+      id: Number(id)
     };
     axios.post(updateProfileAPI, apiPayload)
       .then(res => {

@@ -24,9 +24,9 @@ class Profile extends Component {
             .then(res => {
 
                 if (res.data.errorMsg === "") {
-                    localStorage.setItem('id', res.data.id);
-                    localStorage.setItem('name', res.data.name);
-                    localStorage.setItem('email', res.data.email);
+                    localStorage.setItem('id', res.data.data.id);
+                    localStorage.setItem('name', res.data.data.name);
+                    localStorage.setItem('email', res.data.data.email);
                 }
                 else {
                     this.props.history.push('/login')

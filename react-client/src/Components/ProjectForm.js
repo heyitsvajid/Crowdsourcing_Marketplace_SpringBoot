@@ -72,17 +72,16 @@ class ProjectForm extends Component {
             title: 'Post Project',
             text: 'Project posted successfully',
           })
-          window.location.href = 'http://localhost:3000/home'
-          this.setState({
-            file: '',
-            successMessage: '',
-            errorMessage: '',
-            title: '',
-            description: '',
-            skill: '',
-            budget: '',
-            period: '',
-          });
+          // this.setState({
+          //   file: '',
+          //   successMessage: '',
+          //   errorMessage: '',
+          //   title: '',
+          //   description: '',
+          //   skill: '',
+          //   budget: '',
+          //   period: '',
+          // });
         
       }
     });
