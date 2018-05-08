@@ -37,7 +37,9 @@ public class ProjectController {
     public @ResponseBody
     Iterable<Project> getAllProjects() {
         // This returns a JSON with the users
+        logger.info("All Projects Fetched");
         return projectService.getAllProjects();
+
     }
 
     @PostMapping(path = "/getProjectById", consumes = MediaType.APPLICATION_JSON_VALUE)

@@ -97,7 +97,7 @@ public class UserController {
         ResultObject ro = new ResultObject("User not found", "", null);
 
         JSONObject jsonObject = new JSONObject(user);
-        User u = userService.findById(jsonObject.getLong("id"));
+        User u = userService.findById(jsonObject.getInt("id"));
         if (u != null) {
             ro.setErrorMsg("");
             ro.setSuccessMsg("User found");
